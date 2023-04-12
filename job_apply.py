@@ -1,25 +1,38 @@
 from selenium.webdriver.common.keys import Keys
 from selenium import webdriver
-
+from selenium.webdriver.common.by import By
+import os
 import time
 
 import math
 
 
 class Linkedin:
+    email = os.getenv('email')
+    password = os.getenv('password')
 
     def __init__(self):
 
       #  linkprofile = webdriver.ChromeOptions('')
 
         self.driver = webdriver.Chrome(
-            "C:/Users/54115/Documents/Dev/chromedriver")
+            "./chromedriver")
 
-        self.driver.get('https://www.linkedin.com/mynetwork/')
+        self.driver.get("https://www.linkedin.com/login")
 
-        time.sleep(35)
+        # introduce email and password and hit enter
+        
+
+        time.sleep(5)
 
     def Link_job_apply(self):
+        login_email = self.driver.find_element_by_name('session_key')
+        login_email.clear()
+        login_email.send_keys(self.email)
+        login_pass = self.driver.find_element_by_name('session_password')
+        login_pass.clear()
+        login_pass.send_keys(self.password)
+        login_pass.send_keys(Keys.RETURN)
 
         count_application = 0
 
@@ -39,9 +52,7 @@ class Linkedin:
 
                 'https://www.linkedin.com/jobs/search/' + easy_apply + '&keywords=' + keywords[indexpag] + "&" + location)
 
-            numofjobs = self.driver.find_element_by_xpath(
-
-                '//small').text  # get number of results
+            numofjobs = self.driver.find_element(by= By.XPATH, value='//small').text  # get number of results
 
             space_ind = numofjobs.index(' ')
 
@@ -65,9 +76,7 @@ class Linkedin:
 
                 time.sleep(10)
 
-                links = self.driver.find_elements_by_xpath(
-
-                    '//div[@data-job-id]')  # needs to be scrolled down
+                links = self.driver.find_elements(by= By.XPATH, value='//div[@data-job-id]')  # needs to be scrolled down
 
                 IDs = []
 
@@ -96,9 +105,7 @@ class Linkedin:
 
                     try:
 
-                        button = self.driver.find_elements_by_xpath(
-
-                            '//button[contains(@class, "jobs-apply")]/span[1]')
+                        button = self.driver.find_elements(by= By.XPATH, value='//button[contains(@class, "jobs-apply")]/span[1]')
 
                         # if button[0].text in "Easy Apply" :
 
